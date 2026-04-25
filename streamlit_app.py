@@ -11,13 +11,13 @@ try:
     openai_api_key = st.secrets["OPENAI_API_KEY"]
 except Exception as e:
     st.error(f"❌ OpenAI API key not found in secrets: {e}")
-    st.info("Please add your OpenAI API key to `.streamlit/secrets.toml` as `OPENAI_API_KEY = 'sk-...'`")
+    st.info("Please add your OpenAI API key to Streamlit secrets.")
     st.stop()
 
-# Optional: Validate API key with a simple test call
+# Optional: Validate API key with v1.0.0+ syntax
 try:
-    openai.api_key = openai_api_key
-    openai.Model.list()  # lightweight validation
+    client = openai.OpenAI(api_key=openai_api_key)
+    client.models.list()  # This is the correct syntax for v1.0.0+
 except Exception as e:
     st.error(f"❌ Invalid or expired OpenAI API key: {e}")
     st.stop()
