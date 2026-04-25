@@ -10,7 +10,7 @@ st.title("Arsalan's PandasLLM Chatbot app")
 try:
     gem_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=gem_key)
-    model = genai.GenerativeModel('gemini-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
     st.error(f"Error accessing the Gemini Key: {e}")
     st.stop()
