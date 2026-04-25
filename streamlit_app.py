@@ -20,14 +20,14 @@ if csv_file:
     df = pd.read_csv(csv_file)
     st.write("### Dataset Preview", df.head(3))
 
-    conv_df = PandasLLM(data=df)
 
     user_query = st.text_input("Query your data in natural langauge!")
 
     if st.button("Analyze"):
+        analyzer = PandasLLM(data=df)
         if user_query:
             with st.spinner("Processing request"):
-                prompt = conv_df.create_prompt(user_query)
+                prompt = analyzer.create_prompt(user_query)
 
                 try:
                     gem_response = model.generate_content(prompt)
@@ -35,7 +35,7 @@ if csv_file:
 
                     st.code(python_code, language='python')
 
-                    result = conv_df.execInSandbox(python_code)
+                    result = analyzer.execInSandbox(python_code)
                     st.success("Result:")
                     st.write(result)
 
@@ -43,7 +43,7 @@ if csv_file:
                         st.code(python_code, language="python")
 
                 except Exception as e:
-                    st.error("Execution Error: {e}")
+                    st.error(f"Execution Error: {e}")
                     st.info("The LLM generated code that could not be run!")
         else:
             st.warning("Please enter a query")
