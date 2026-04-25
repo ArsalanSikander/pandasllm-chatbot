@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from pandas_llm import PandasLLM
 import google.generativeai as genai
+import re
 
 st.set_page_config(page_title="PandasLLM EDA", layout='wide')
 st.title("Arsalan's PandasLLM Chatbot app")
@@ -24,18 +25,18 @@ if csv_file:
     user_query = st.text_input("Query your data in natural langauge!")
 
     if st.button("Analyze"):
-        analyzer = PandasLLM(data=df)
         if user_query:
             with st.spinner("Processing request"):
-                prompt = analyzer.create_prompt(user_query)
+                conv_handler = PandasLLM(data=df)
+                prompt = conv_handler.create_prompt(user_query)
 
                 try:
                     gem_response = model.generate_content(prompt)
-                    python_code = gem_response.text
+                    python_code = re.sub(r'^```python\s*|```$', '', gem_response.text, flags=re.MULTILINE).strip()
 
                     st.code(python_code, language='python')
 
-                    result = analyzer.execInSandbox(python_code)
+                    result = conv_handler.execInSandbox(python_code)
                     st.success("Result:")
                     st.write(result)
 
