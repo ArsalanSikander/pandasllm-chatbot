@@ -1,18 +1,15 @@
 import streamlit as st
 import pandas as pd
 from pandas_llm import PandasLLM
-import google.generativeai as genai
-import re
 
 st.set_page_config(page_title="PandasLLM EDA", layout='wide')
 st.title("Arsalan's PandasLLM Chatbot app")
 
+# Get OpenAI API key from secrets
 try:
-    gem_key = st.secrets["GEMINI_API_KEY"]
-    genai.configure(api_key=gem_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
 except Exception as e:
-    st.error(f"Error accessing the Gemini Key: {e}")
+    st.error(f"Error accessing OpenAI API Key: {e}")
     st.stop()
 
 csv_file = st.sidebar.file_uploader("Upload data (CSV)", type=["csv"])
@@ -21,22 +18,21 @@ if csv_file:
     df = pd.read_csv(csv_file)
     st.write("### Dataset Preview", df.head(3))
 
-
-    user_query = st.text_input("Query your data in natural langauge!")
+    user_query = st.text_input("Query your data in natural language!")
 
     if st.button("Analyze"):
         if user_query:
             with st.spinner("Processing request"):
-                conv_handler = PandasLLM(data=df)
-                prompt = conv_handler.create_prompt(user_query)
+                # Initialize PandasLLM with your dataframe and OpenAI key
+                llm = PandasLLM(data=df, llm_api_key=openai_api_key)
 
                 try:
-                    gem_response = model.generate_content(prompt)
-                    python_code = re.sub(r'^```python\s*|```$', '', gem_response.text, flags=re.MULTILINE).strip()
+                    # Directly use the prompt method (generates + executes code)
+                    result = llm.prompt(user_query)
 
-                    st.code(python_code, language='python')
+                    # Optionally retrieve the generated code (if needed)
+                    python_code = getattr(llm, 'code_block', 'Code not available')
 
-                    result = conv_handler.execInSandbox(python_code)
                     st.success("Result:")
                     st.write(result)
 
