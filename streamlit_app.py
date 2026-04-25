@@ -35,7 +35,7 @@ if csv_file:
 
                     st.code(python_code, language='python')
 
-                    result = conv_df._execInSandbox(python_code)
+                    result = conv_df.execInSandbox(python_code)
                     st.success("Result:")
                     st.write(result)
 
