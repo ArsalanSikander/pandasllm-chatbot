@@ -36,6 +36,7 @@ if csv_file:
                     llm = PandasLLM(data=df, llm_api_key=openai_api_key)
 
                     result = llm.prompt(user_query)
+                    st.write("DEBUG result:", result)   # Add this line temporarily
                     
                     python_code = getattr(llm, 'code_block', 'Code not captured')
                     
