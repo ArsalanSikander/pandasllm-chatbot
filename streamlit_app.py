@@ -20,7 +20,34 @@ if csv_data:
     df = pd.read_csv(csv_data)
     st.write("### Preview of data", df.head(3))
 
-    user_query = st.text_input("Query your data in natural langauge")
+    if "query_text" not in st.session_state:
+        st.session_state.query_text = ""
+
+    user_query = st.text_input(
+        "Query your data in natural langauge",
+        value = st.session_state.query_text,
+        key = "user_query_widget"
+        )
+
+    template = st.selectbox("Quick questions", [
+    "Select a template...",
+    "Show the first 5 rows",
+    "What is the shape of the dataset?",
+    "List all column names",
+    "Show summary statistics for numeric columns",
+    "Count missing values in each column",
+    "Find the most frequent value in column X",      # change X to a real column
+    "Show correlation matrix",
+    "Plot a histogram of column Y",
+    ])
+
+    if template != "Select a template...":
+        st.session_state.quert_text = template
+        st.rerun() # refresh the data
+
+
+    final_query = st.session_state.query_text
+    
 
     if st.button("Analyze"):
         if not user_query.strip():
