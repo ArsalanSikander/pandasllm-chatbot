@@ -20,19 +20,18 @@ if csv_data:
     df = pd.read_csv(csv_data)
     st.write("### Preview of data", df.head(3))
 
-    if "query_text" not in st.session_state:
-        st.session_state.query_text = ""
+    if "user_query_widget" not in st.session_state:
+        st.session_state.user_query_widget = ""
 
     def apply_template():
         if st.session_state.template_selector != "Select a template...":
-            st.session_state.query_text = st.session_state.template_selector
+            st.session_state.user_query_widget = st.session_state.template_selector
             st.session_state.template_selector = "Select a template..."
 
     user_query = st.text_input(
         "Query your data in natural langauge",
-        value = st.session_state.query_text,
         key = "user_query_widget"
-        )
+    )
 
     template = st.selectbox("Quick questions", [
         "Select a template...",
@@ -48,11 +47,9 @@ if csv_data:
         on_change=apply_template
     )
 
-    final_query = st.session_state.query_text
-    
 
     if st.button("Analyze"):
-        if not final_query.strip():
+        if not user_query.strip():
             st.warning("Please enter a query!")
         else:
             with st.spinner("Processing your request"):
@@ -66,7 +63,7 @@ if csv_data:
 
                     smart_df = pai.SmartDataframe(df)
 
-                    answer = smart_df.chat(final_query)
+                    answer = smart_df.chat(user_query)
 
                     st.success("Result: ")
                     
