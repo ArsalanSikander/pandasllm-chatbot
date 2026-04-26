@@ -65,6 +65,7 @@ if csv_data:
                     smart_df = pai.SmartDataframe(df)
 
                     answer = smart_df.chat(user_query)
+                    answer_str = str(answer)
 
                     st.success("Result: ")
                     
@@ -73,7 +74,7 @@ if csv_data:
                     elif isinstance(answer, Figure):
                         st.pyplot(answer)
                     elif isinstance(answer, str) and answer.endswith(('.png', '.jpg', '.jpeg')):
-                        st.image(answer.strip())   
+                        st.image(answer_str.strip())   
                     else:
                         st.write(answer)  # fallback to just showing whatever answer
 
