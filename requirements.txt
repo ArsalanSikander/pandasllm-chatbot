@@ -2,3 +2,4 @@ streamlit
 pandas
 pandasai
 pandasai_litellm
+matplotlib

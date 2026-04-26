@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pandasai as pai
 from pandasai_litellm import LiteLLM
+import matplotlib as plt
 
 st.set_page_config(page_title="PandasLLM EDA", layout='wide')
 st.title("EDA using Natural Language")
@@ -69,6 +70,8 @@ if csv_data:
                     
                     if isinstance(answer, pd.DataFrame):
                         st.dataframe(answer)
+                    elif isinstance(answer, plt.Figure):
+                        st.pyplot(answer)   
                     else:
                         st.write(answer)  # fallback to just showing whatever answer
 
