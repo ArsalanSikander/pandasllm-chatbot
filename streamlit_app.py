@@ -73,8 +73,7 @@ if csv_data:
                         st.dataframe(answer)
                     elif isinstance(answer, Figure):
                         st.pyplot(answer)
-                    elif isinstance(answer, str) and answer.endswith(('.png', '.jpg', '.jpeg')):
-                        st.image(answer_str.strip())   
+                    elif answer_str.strip().endswith(('.png', '.jpg', '.jpeg')):                        st.image(answer_str.strip())   
                     else:
                         st.write(answer)  # fallback to just showing whatever answer
 
