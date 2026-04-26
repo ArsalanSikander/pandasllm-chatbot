@@ -23,6 +23,11 @@ if csv_data:
     if "query_text" not in st.session_state:
         st.session_state.query_text = ""
 
+    def apply_template():
+        if st.session_state.template_selector != "Select a template...":
+            st.session_state.query_text = st.session_state.template_selector
+            st.session_state.template_selector = "Select a template..."
+
     user_query = st.text_input(
         "Query your data in natural langauge",
         value = st.session_state.query_text,
@@ -30,27 +35,24 @@ if csv_data:
         )
 
     template = st.selectbox("Quick questions", [
-    "Select a template...",
-    "Show the first 5 rows",
-    "What is the shape of the dataset?",
-    "List all column names",
-    "Show summary statistics for numeric columns",
-    "Count missing values in each column",
-    "Find the most frequent value in column X",      # change X to a real column
-    "Show correlation matrix",
-    "Plot a histogram of column Y",
-    ])
-
-    if template != "Select a template...":
-        st.session_state.quert_text = template
-        st.rerun() # refresh the data
-
+        "Select a template...",
+        "Show the first 5 rows",
+        "What is the shape of the dataset?",
+        "List all column names",
+        "Show summary statistics for numeric columns",
+        "Count missing values in each column",
+        "Find the most frequent value in column X",      # change X to a real column
+        "Show correlation matrix",
+        "Plot a histogram of column Y"],
+        key="template_selector",
+        on_change=apply_template
+    )
 
     final_query = st.session_state.query_text
     
 
     if st.button("Analyze"):
-        if not user_query.strip():
+        if not final_query.strip():
             st.warning("Please enter a query!")
         else:
             with st.spinner("Processing your request"):
@@ -64,7 +66,7 @@ if csv_data:
 
                     smart_df = pai.SmartDataframe(df)
 
-                    answer = smart_df.chat(user_query)
+                    answer = smart_df.chat(final_query)
 
                     st.success("Result: ")
                     
