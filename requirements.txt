@@ -1,4 +1,4 @@
 streamlit
 pandas
-pandas-llm
-openai
+pandasai
+pandasai_litellm
