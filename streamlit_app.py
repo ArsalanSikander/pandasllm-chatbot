@@ -7,7 +7,7 @@ st.set_page_config(page_title="PandasLLM EDA", layout='wide')
 st.title("EDA using Natural Language")
 
 try:
-    ai_api_key = st.secrets["ai_api_key"]
+    ai_api_key = st.secrets["OPENAI_API_KEY"]
 except Exception as e:
     ai_api_key  = st.text_input("Enter OpenAI api key: ", type='password')
     if not ai_api_key:
